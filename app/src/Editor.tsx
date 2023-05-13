@@ -307,7 +307,40 @@ export default function App() {
       setPlaceholder(t);
     },
     onInputComplete: (t) => {
-      // TODO
+      setPlaceholder("");
+      const lastNode = editor.children.at(-1) as CustomElement;
+      if (lastNode.type === BlockType.Paragraph) {
+        const lastNodeText = Editor.string(editor, [
+          editor.children.length - 1,
+        ]);
+        Transforms.insertNodes(
+          editor,
+          {
+            text:
+              (lastNodeText === "" || lastNodeText.endsWith(" ") ? "" : " ") +
+              t,
+          },
+          {
+            at: [editor.children.length - 1, lastNode.children.length],
+          }
+        );
+      } else {
+        Transforms.insertNodes(
+          editor,
+          {
+            id: nanoid(),
+            type: BlockType.Paragraph,
+            children: [
+              {
+                text: t,
+              },
+            ],
+          },
+          {
+            at: [editor.children.length],
+          }
+        );
+      }
     },
   };
 
