@@ -1,95 +1,11 @@
-import { LiveList } from "@liveblocks/client";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
-import Editor from "../src/Editor";
-import { RoomProvider } from "../src/liveblocks.config";
-import { BlockType, CustomElement } from "../src/types";
-
-const initialValue: CustomElement[] = [
-  {
-    id: nanoid(),
-    type: BlockType.Title,
-    children: [
-      {
-        text: "📝🥷 NoteNinja",
-      },
-    ],
-  },
-  {
-    id: nanoid(),
-    type: BlockType.Paragraph,
-    children: [
-      {
-        text: "Lecture Notes That Write Themselves",
-        bold: true,
-      },
-    ],
-  },
-  {
-    id: nanoid(),
-    type: BlockType.Paragraph,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-  {
-    id: nanoid(),
-    type: BlockType.Paragraph,
-    children: [
-      {
-        text: "",
-      },
-    ],
-  },
-];
+import { useEffect } from "react";
 
 export default function Page() {
-  const roomId = useOverrideRoomId("nextjs-block-text-editor-advanced");
-
-  return (
-    <RoomProvider
-      id={roomId}
-      initialStorage={{
-        recordingPlaceholder: "",
-        blocks: new LiveList(initialValue),
-      }}
-      initialPresence={{
-        selectedBlockId: null,
-        isRecording: false,
-      }}
-    >
-      <Editor />
-    </RoomProvider>
-  );
-}
-
-export async function getStaticProps() {
-  const API_KEY = process.env.LIVEBLOCKS_SECRET_KEY;
-  const API_KEY_WARNING = process.env.CODESANDBOX_SSE
-    ? `Add your secret key from https://liveblocks.io/dashboard/apikeys as the \`LIVEBLOCKS_SECRET_KEY\` secret in CodeSandbox.\n` +
-      `Learn more: https://github.com/liveblocks/liveblocks/tree/main/examples/nextjs-block-text-editor-advanced#codesandbox.`
-    : `Create an \`.env.local\` file and add your secret key from https://liveblocks.io/dashboard/apikeys as the \`LIVEBLOCKS_SECRET_KEY\` environment variable.\n` +
-      `Learn more: https://github.com/liveblocks/liveblocks/tree/main/examples/nextjs-block-text-editor-advanced#getting-started.`;
-
-  if (!API_KEY) {
-    console.warn(API_KEY_WARNING);
-  }
-
-  return { props: {} };
-}
-
-/**
- * This function is used when deploying an example on liveblocks.io.
- * You can ignore it completely if you run the example locally.
- */
-function useOverrideRoomId(roomId: string) {
-  const { query } = useRouter();
-  const overrideRoomId = useMemo(() => {
-    return query?.roomId ? `${roomId}-${query.roomId}` : roomId;
-  }, [query, roomId]);
-
-  return overrideRoomId;
+  const router = useRouter();
+  useEffect(() => {
+    router.push("/editor/" + nanoid());
+  }, []);
+  return null;
 }
