@@ -296,6 +296,7 @@ export default function App() {
     [editor.children]
   );
 
+  const placeholderToClearRef = useRef("");
   const setPlaceholder = useMutation((c, t: string) => {
     c.storage.set("recordingPlaceholder", t);
   }, []);
@@ -307,7 +308,8 @@ export default function App() {
       setPlaceholder(t);
     },
     onInputComplete: (t) => {
-      setPlaceholder("");
+      placeholderToClearRef.current = recordingPlaceholder ?? "";
+
       const lastNode = editor.children.at(-1) as CustomElement;
       if (lastNode.type === BlockType.Paragraph) {
         const lastNodeText = Editor.string(editor, [
@@ -382,6 +384,14 @@ export default function App() {
               isEditingRef.current = true;
 
               room.batch(() => {
+                if (
+                  placeholderToClearRef.current &&
+                  placeholderToClearRef.current === recordingPlaceholder
+                ) {
+                  placeholderToClearRef.current = "";
+                  setPlaceholder("");
+                }
+
                 // If the operation is a "move_node", we assume that it's coming from the drag operation and we simply call LiveList.move
                 if (
                   editor.operations.length === 1 &&
