@@ -5,3 +5,10 @@
   user-select: none;
   z-index: -1;
 }
+
+.recordingPlaceholder {
+  color: rgba(var(--color-foreground), 0.3);
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+}

@@ -8,9 +8,11 @@ export const client = createClient({
 
 export const {
   RoomProvider,
+  useMutation,
   useOthers,
   useRoom,
   useList,
   useSelf,
+  useStorage,
   useUpdateMyPresence,
 } = createRoomContext<Presence, Storage, UserMeta>(client);

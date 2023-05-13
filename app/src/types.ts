@@ -17,6 +17,7 @@ export type Presence = {
 };
 
 export type Storage = {
+  recordingPlaceholder: string;
   blocks: LiveList<CustomElement>;
 };
 
@@ -124,6 +125,7 @@ export type CustomText = {
 
 type LeafDecoration = {
   placeholder?: string;
+  recordingPlaceholder?: boolean;
 };
 
 export type Format = "bold" | "underline" | "strikeThrough" | "italic";

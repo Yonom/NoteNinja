@@ -53,6 +53,7 @@ export default function Page() {
     <RoomProvider
       id={roomId}
       initialStorage={{
+        recordingPlaceholder: "",
         blocks: new LiveList(initialValue),
       }}
       initialPresence={{

@@ -37,11 +37,13 @@ import classNames from "classnames";
 
 import {
   useList,
+  useMutation,
   useOthers,
   useRoom,
+  useStorage,
   useUpdateMyPresence,
 } from "./liveblocks.config";
-import { BlockType, CustomElement } from "./types";
+import { BlockType, CustomElement, CustomText } from "./types";
 import {
   removeGlobalCursor,
   setGlobalCursor,
@@ -95,6 +97,7 @@ export default function App() {
 
   const room = useRoom();
   const blocks = useList("blocks");
+  const recordingPlaceholder = useStorage((s) => s.recordingPlaceholder);
   const isEditingRef = useRef(false);
   const updateMyPresence = useUpdateMyPresence();
 
@@ -293,13 +296,28 @@ export default function App() {
     [editor.children]
   );
 
+  const setPlaceholder = useMutation((c, t: string) => {
+    c.storage.set("recordingPlaceholder", t);
+  }, []);
+
+  // use a proxy object to be able to access local variables
+  const assemblyAiConfigProxy = useRef<AssemblyAiConfig>();
+  assemblyAiConfigProxy.current = {
+    onInput: (t) => {
+      setPlaceholder(t);
+    },
+    onInputComplete: (t) => {
+      // TODO
+    },
+  };
 
   const [recorder] = useState<AssemblyAiRecorder | null>(() =>
     typeof window === "undefined"
       ? null
       : assemblyAi({
-          onInput: console.log,
-          onInputComplete: (t) => console.log,
+          onInput: (t) => assemblyAiConfigProxy.current?.onInput(t),
+          onInputComplete: (t) =>
+            assemblyAiConfigProxy.current?.onInputComplete(t),
         })
   );
 
@@ -424,6 +442,30 @@ export default function App() {
                    * https://jkrsp.com/slate-js-placeholder-per-line/
                    **/
                   decorate={([node, path]) => {
+                    if (path.length < 2) return [];
+
+                    if (
+                      recordingPlaceholder &&
+                      editor.children.length - 1 === path[0]
+                    ) {
+                      const lastNode = editor.children.at(-1) as CustomElement;
+                      if (
+                        lastNode.type === BlockType.Paragraph &&
+                        lastNode.children.length - 1 === path[1]
+                      ) {
+                        const lastChild = lastNode.children.at(
+                          -1
+                        ) as CustomText;
+                        return [
+                          {
+                            anchor: { path, offset: lastChild.text.length },
+                            focus: { path, offset: lastChild.text.length },
+                            recordingPlaceholder: true,
+                          },
+                        ];
+                      }
+                    }
+
                     if (editor.selection != null) {
                       if (
                         !Editor.isEditor(node) &&
