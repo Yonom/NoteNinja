@@ -13,6 +13,7 @@ declare module "slate" {
 
 export type Presence = {
   selectedBlockId: string | null;
+  isRecording: boolean;
 };
 
 export type Storage = {

@@ -56,3 +56,30 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.recordButton {
+  padding: 8px 12px;
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.loadingButton {
+  padding: 8px 12px;
+  background-color: #4caf50aa;
+  border: none;
+  color: white;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.stopButton {
+  padding: 8px 12px;
+  background-color: #555555;
+  border: none;
+  color: white;
+  font-weight: 700;
+  border-radius: 8px;
+}

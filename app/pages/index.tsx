@@ -57,6 +57,7 @@ export default function Page() {
       }}
       initialPresence={{
         selectedBlockId: null,
+        isRecording: false,
       }}
     >
       <Editor />

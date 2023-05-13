@@ -60,6 +60,10 @@ import {
   Toolbar,
 } from "./components";
 import { nanoid } from "nanoid";
+import assemblyAi, {
+  AssemblyAiConfig,
+  AssemblyAiRecorder,
+} from "./services/assemblyAi";
 
 const SHORTCUTS: Record<string, BlockType> = {
   "*": BlockType.BulletedList,
@@ -289,13 +293,23 @@ export default function App() {
     [editor.children]
   );
 
+
+  const [recorder] = useState<AssemblyAiRecorder | null>(() =>
+    typeof window === "undefined"
+      ? null
+      : assemblyAi({
+          onInput: console.log,
+          onInputComplete: (t) => console.log,
+        })
+  );
+
   if (blocks == null) {
     return <Loading />;
   }
 
   return (
     <div className={styles.editor}>
-      <Header />
+      <Header recorder={recorder} />
 
       <div
         className={classNames(styles.prose, "prose")}
