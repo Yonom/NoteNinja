@@ -66,6 +66,7 @@ import assemblyAi, {
   AssemblyAiConfig,
   AssemblyAiRecorder,
 } from "./services/assemblyAi";
+import { withImageAutoEmbed } from "./withImageAutoEmbed";
 
 const SHORTCUTS: Record<string, BlockType> = {
   "*": BlockType.BulletedList,
@@ -79,7 +80,10 @@ const SHORTCUTS: Record<string, BlockType> = {
 
 const useEditor = () =>
   useMemo(
-    () => withShortcuts(withNodeId(withLayout(withReact(createEditor())))),
+    () =>
+      withImageAutoEmbed(
+        withShortcuts(withNodeId(withLayout(withReact(createEditor()))))
+      ),
     []
   );
 
